@@ -7,7 +7,7 @@ document.querySelector("#app").innerHTML = `
         <p class="score" id="score--0">43</p>
         <div class="current">
           <p class="current-label">Current</p>
-          <p class="current-score" id="current--0">0</p>
+          <p class="current-score" id="current--0">3</p>
         </div>
       </section>
       <section class="player player--1">
@@ -15,7 +15,7 @@ document.querySelector("#app").innerHTML = `
         <p class="score" id="score--1">24</p>
         <div class="current">
           <p class="current-label">Current</p>
-          <p class="current-score" id="current--1">0</p>
+          <p class="current-score" id="current--1">5</p>
         </div>
       </section>
 
@@ -26,3 +26,43 @@ document.querySelector("#app").innerHTML = `
     </main>
 
 `;
+
+// variables de estado en JS y selectores DOMXS
+
+// activePlayer -> variable de estado en JS
+const sectionPlayer0 = document.querySelector(".player--0");
+const sectionPlayer1 = document.querySelector(".player--1");
+// score = [0,0] -> variable de estado en JS
+const score0 = document.querySelector("#score--0");
+const score1 = document.querySelector("#score--1");
+
+// current -> variable de estado en JS
+const currentScore0 = document.querySelector("#current--0");
+const currentScore1 = document.querySelector("#current--1");
+
+const btnNew = document.querySelector(".btn--new");
+const btnHold = document.querySelector(".btn--hold");
+const btnRoll = document.querySelector(".btn--roll");
+
+const imgDice = document.querySelector(".dice");
+
+let score, currentScore, activePlayer;
+
+const initData = () => {
+  // init state variables
+  score = [0, 0];
+  currentScore = 0;
+  activePlayer = 0;
+  // init DOM elements
+  console.log(sectionPlayer0, "sectionPlayer0");
+  console.log(score0, "score0");
+  console.log(score1, "score1");
+  console.log(currentScore0, "currentScore0");
+  console.log(currentScore1, "currentScore1");
+  score0.textContent = 0;
+  score1.textContent = 0;
+  currentScore0.textContent = 0;
+  currentScore1.textContent = 0;
+};
+
+initData();
