@@ -53,12 +53,10 @@ const initData = () => {
   score = [0, 0];
   currentScore = 0;
   activePlayer = 0;
+
   // init DOM elements
-  console.log(sectionPlayer0, "sectionPlayer0");
-  console.log(score0, "score0");
-  console.log(score1, "score1");
-  console.log(currentScore0, "currentScore0");
-  console.log(currentScore1, "currentScore1");
+
+  imgDice.classList.add("hidden");
   score0.textContent = 0;
   score1.textContent = 0;
   currentScore0.textContent = 0;
@@ -66,3 +64,52 @@ const initData = () => {
 };
 
 initData();
+
+btnRoll.addEventListener("click", throwDice);
+
+function throwDice() {
+  // generar un número del 1 al 6
+  const diceNumber = Math.trunc(Math.random() * 6 + 1);
+  // mostrar el número
+  imgDice.classList.remove("hidden");
+  imgDice.src = `dice-${diceNumber}.png`;
+  // si no es 1....
+  if (diceNumber !== 1) updateCurrentScore(diceNumber);
+  else switchPlayer();
+}
+
+function updateCurrentScore(diceNumber) {
+  currentScore += diceNumber; // current = current + diceNumber
+  if (activePlayer === 0) currentScore0.textContent = currentScore;
+  else currentScore1.textContent = currentScore;
+}
+
+function switchPlayer() {
+  {
+    // currentScore se tiene que resetear a 0 y también en el DOM!!!
+    resetCurrentScore();
+
+    // css cambiará
+
+    sectionPlayer0.classList.toggle("player--active");
+    sectionPlayer1.classList.toggle("player--active");
+
+    // versión larga:
+    // if (activePlayer === 0) {
+    //   sectionPlayer0.classList.remove("player--active");
+    //   sectionPlayer1.classList.add("player--active");
+    // } else {
+    //   sectionPlayer1.classList.remove("player--active");
+    //   sectionPlayer0.classList.add("player--active");
+    // }
+
+    // activePlayer cambia de 0 a 1 ó de 1 a 0
+    activePlayer = activePlayer === 0 ? 1 : 0;
+  }
+}
+
+function resetCurrentScore() {
+  currentScore = 0; // current = current + diceNumber
+  if (activePlayer === 0) currentScore0.textContent = currentScore;
+  else currentScore1.textContent = currentScore;
+}
