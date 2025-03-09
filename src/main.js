@@ -1,115 +1,138 @@
-import "./style.css";
+import './style.css'
+import javascriptLogo from './javascript.svg'
+import viteLogo from '/vite.svg'
+import { setupCounter } from './counter.js'
 
-document.querySelector("#app").innerHTML = `
-    <main>
-      <section class="player player--0 player--active">
+document.querySelector('#app').innerHTML = `
+  <div>
+    <a href="https://vite.dev" target="_blank">
+      <img src="${viteLogo}" class="logo" alt="Vite logo" />
+    </a>
+    <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank">
+      <img src="${javascriptLogo}" class="logo vanilla" alt="JavaScript logo" />
+    </a>
+    <h1>Hello Vite!</h1>
+    <div class="card">
+      <button id="counter" type="button"></button>
+    </div>
+    <p class="read-the-docs">
+      Click on the Vite logo to learn more
+    </p>
+    <div class="game">
+      <div class="player player--0 player--active">
         <h2 class="name" id="name--0">Player 1</h2>
-        <p class="score" id="score--0">43</p>
-        <div class="current">
-          <p class="current-label">Current</p>
-          <p class="current-score" id="current--0">3</p>
-        </div>
-      </section>
-      <section class="player player--1">
+        <p class="score" id="score--0">0</p>
+        <h2 class="current-score" id="current--0">0</h2>
+      </div>
+      <div class="player player--1">
         <h2 class="name" id="name--1">Player 2</h2>
-        <p class="score" id="score--1">24</p>
-        <div class="current">
-          <p class="current-label">Current</p>
-          <p class="current-score" id="current--1">5</p>
-        </div>
-      </section>
+        <p class="score" id="score--1">0</p>
+        <h2 class="current-score" id="current--1">0</h2>
+      </div>
+      <button class="btn btn--new" id="btnNew">New game</button>
+      <button class="btn btn--roll" id="btnRoll">Roll dice</button>
+      <button class="btn btn--hold" id="btnHold">Hold</button>
+      <img src="/dice-1.png" alt="Playing dice" class="dice">
+    </div>
+  </div>
+`
 
-      <img src="dice-5.png" alt="Playing dice" class="dice" />
-      <button class="btn btn--new">🔄 New game</button>
-      <button class="btn btn--roll">🎲 Roll dice</button>
-      <button class="btn btn--hold">📥 Hold</button>
-    </main>
+setupCounter(document.querySelector('#counter'))
 
-`;
+// Seleccionar elementos
+const player0El = document.querySelector('.player--0');
+const player1El = document.querySelector('.player--1');
+const score0El = document.getElementById('score--0');
+const score1El = document.getElementById('score--1');
+const current0El = document.getElementById('current--0');
+const current1El = document.getElementById('current--1');
+const diceEl = document.querySelector('.dice');
+const btnNew = document.querySelector('.btn--new');
+const btnRoll = document.querySelector('.btn--roll');
+const btnHold = document.querySelector('.btn--hold');
 
-// variables de estado en JS y selectores DOMXS
+let scores, currentScore, activePlayer, playing;
 
-// activePlayer -> variable de estado en JS
-const sectionPlayer0 = document.querySelector(".player--0");
-const sectionPlayer1 = document.querySelector(".player--1");
-// score = [0,0] -> variable de estado en JS
-const score0 = document.querySelector("#score--0");
-const score1 = document.querySelector("#score--1");
+// Función de inicialización
+const init = function () {
+    // Estado inicial del juego
+    scores = [0, 0];
+    currentScore = 0;
+    activePlayer = 0;
+    playing = true;
 
-// current -> variable de estado en JS
-const currentScore0 = document.querySelector("#current--0");
-const currentScore1 = document.querySelector("#current--1");
+    // Reiniciar elementos visuales
+    score0El.textContent = 0;
+    score1El.textContent = 0;
+    current0El.textContent = 0;
+    current1El.textContent = 0;
 
-const btnNew = document.querySelector(".btn--new");
-const btnHold = document.querySelector(".btn--hold");
-const btnRoll = document.querySelector(".btn--roll");
-
-const imgDice = document.querySelector(".dice");
-
-let score, currentScore, activePlayer;
-
-const initData = () => {
-  // init state variables
-  score = [0, 0];
-  currentScore = 0;
-  activePlayer = 0;
-
-  // init DOM elements
-
-  imgDice.classList.add("hidden");
-  score0.textContent = 0;
-  score1.textContent = 0;
-  currentScore0.textContent = 0;
-  currentScore1.textContent = 0;
+    // Reiniciar clases
+    diceEl.style.display = 'none';
+    player0El.classList.remove('player--winner');
+    player1El.classList.remove('player--winner');
+    player0El.classList.add('player--active');
+    player1El.classList.remove('player--active');
 };
 
-initData();
+// Llamar a la inicialización al cargar la página
+init();
 
-btnRoll.addEventListener("click", throwDice);
-
-function throwDice() {
-  // generar un número del 1 al 6
-  const diceNumber = Math.trunc(Math.random() * 6 + 1);
-  // mostrar el número
-  imgDice.classList.remove("hidden");
-  imgDice.src = `dice-${diceNumber}.png`;
-  // si no es 1....
-  if (diceNumber !== 1) updateCurrentScore(diceNumber);
-  else switchPlayer();
-}
-
-function updateCurrentScore(diceNumber) {
-  currentScore += diceNumber; // current = current + diceNumber
-  if (activePlayer === 0) currentScore0.textContent = currentScore;
-  else currentScore1.textContent = currentScore;
-}
-
-function switchPlayer() {
-  {
-    // currentScore se tiene que resetear a 0 y también en el DOM!!!
-    resetCurrentScore();
-
-    // css cambiará
-
-    sectionPlayer0.classList.toggle("player--active");
-    sectionPlayer1.classList.toggle("player--active");
-
-    // versión larga:
-    // if (activePlayer === 0) {
-    //   sectionPlayer0.classList.remove("player--active");
-    //   sectionPlayer1.classList.add("player--active");
-    // } else {
-    //   sectionPlayer1.classList.remove("player--active");
-    //   sectionPlayer0.classList.add("player--active");
-    // }
-
-    // activePlayer cambia de 0 a 1 ó de 1 a 0
+// Cambiar jugador
+const switchPlayer = function () {
+    document.getElementById(`current--${activePlayer}`).textContent = 0;
+    currentScore = 0;
     activePlayer = activePlayer === 0 ? 1 : 0;
-  }
-}
+    player0El.classList.toggle('player--active');
+    player1El.classList.toggle('player--active');
+};
 
-function resetCurrentScore() {
-  currentScore = 0; // current = current + diceNumber
-  if (activePlayer === 0) currentScore0.textContent = currentScore;
-  else currentScore1.textContent = currentScore;
-}
+// Tirar dado
+btnRoll.addEventListener('click', function () {
+    if (playing) {
+        // 1. Generar número de dado aleatorio
+        const dice = Math.trunc(Math.random() * 6) + 1;
+
+        // 2. Mostrar dado
+        diceEl.style.display = 'block';
+        diceEl.src = `/dice-${dice}.png`;
+
+        // 3. Verificar si el dado es 1
+        if (dice !== 1) {
+            // Agregar puntuación al puntaje actual
+            currentScore += dice;
+            document.getElementById(`current--${activePlayer}`).textContent = currentScore;
+        } else {
+            // Cambiar al siguiente jugador
+            switchPlayer();
+        }
+    }
+});
+
+// Guardar puntuación
+btnHold.addEventListener('click', function () {
+    if (playing) {
+        // 1. Agregar puntuación actual al puntaje del jugador activo
+        scores[activePlayer] += currentScore;
+        document.getElementById(`score--${activePlayer}`).textContent = scores[activePlayer];
+
+        // 2. Verificar si el jugador ganó (puntuación >= 100)
+        if (scores[activePlayer] >= 100) {
+            // Terminar juego
+            playing = false;
+            diceEl.style.display = 'none';
+            document
+                .querySelector(`.player--${activePlayer}`)
+                .classList.add('player--winner');
+            document
+                .querySelector(`.player--${activePlayer}`)
+                .classList.remove('player--active');
+        } else {
+            // Cambiar al siguiente jugador
+            switchPlayer();
+        }
+    }
+});
+
+// Reiniciar juego
+btnNew.addEventListener('click', init);
